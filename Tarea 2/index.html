@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./script.js" type="module"></script>
+    <style>
+        body {
+		        font-family: "Helvetica Neue", Helvetica, sans-serif;
+		        font-size: 13px;
+        }
+        
+        .bars rect{
+            fill: rgb(233, 0, 0);
+        }
+
+        .bars rect:hover{
+            fill: rgb(111, 0, 255);
+        }
+    </style>
+</head>
+<body>
+    <svg width="1000" height="800">
+        <g class="labels"></g>
+        <g class="bars" transform="translate(130, 0)"></g>
+    </svg>
+</body>
+</html>

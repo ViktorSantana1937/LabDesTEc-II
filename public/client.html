@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Cliente</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="chat-container">
+    <header>💬 Chat de Clientes</header>
+
+    <ul id="messages" class="chat-messages"></ul>
+
+    <div class="chat-input">
+      <input id="msg" placeholder="Escribe un mensaje...">
+      <button id="sendBtn">Enviar</button>
+    </div>
+  </div>
+
+ <script>
+  const socket = new WebSocket('ws://' + window.location.host)
+  const userId = Math.random().toString(36).substring(2, 9) // ID aleatorio por cliente
+
+  socket.addEventListener('open', () => {
+    socket.send(JSON.stringify({ type: 'client-connect', id: userId }))
+  })
+
+  document.querySelector('#sendBtn').addEventListener('click', sendMessage)
+  document.querySelector('#msg').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage()
+  })
+
+  function sendMessage() {
+    const input = document.querySelector('#msg')
+    if (input.value.trim() === '') return
+    socket.send(JSON.stringify({
+      type: 'interaction',
+      val: input.value,
+      id: userId
+    }))
+    input.value = ''
+  }
+
+  socket.addEventListener('message', (m) => {
+    const msg = JSON.parse(m.data)
+    if (msg.type === 'interaction') {
+      const li = document.createElement('li')
+      li.textContent = msg.val
+      li.classList.add('message')
+
+      // si el mensaje viene del propio usuario → clase "self"
+      if (msg.id === userId) {
+        li.classList.add('self')
+      } else {
+        li.classList.add('other')
+      }
+
+      document.getElementById('messages').appendChild(li)
+      li.scrollIntoView()
+    }
+  })
+</script>
+
+</body>
+</html>

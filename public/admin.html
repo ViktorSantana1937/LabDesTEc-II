@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.min.js"></script>
+    <style>
+        body{
+            margin: 0px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const url = `ws://${location.host}`
+        const socket = new WebSocket(url)
+
+        socket.addEventListener('open', () => {
+            socket.send(JSON.stringify({type: 'admin-connect'}))
+            console.log('message sent')
+        })
+
+        socket.addEventListener('message', (m) => {
+            const message = JSON.parse(m.data)
+            const content = message.val
+            console.log(content)
+            textSize(random(50, 300))
+            if(random() > .5) textStyle(BOLD)
+            else textStyle(ITALIC)
+            colorMode(HSB)
+            fill(random(360), 50, 100)
+            text(content, random(width), random(height))
+        })
+
+        function setup(){
+            createCanvas(windowWidth, windowHeight)
+            frameRate(30)
+        }
+
+        function draw(){
+            colorMode(RGB)
+            background(255, 4)
+        }
+    </script>
+</body>
+</html>
